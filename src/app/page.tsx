@@ -1,95 +1,52 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import { Metadata } from "next";
+import Hero from "./components/hero/hero";
+import Feature, { FeatureProps } from "./components/feature/feature";
+import styles from "./page.module.css";
+
+export const metadata: Metadata = {
+  title: "Home",
+};
+
+const features: FeatureProps[] = [
+  {
+    imgSrc: "/img/icon-chat.png",
+    imgAlt: "Chat Icon",
+    title: "You are our #1 priority",
+    content:
+      "Need to talk to a representative? You can get in touch through our 24/7 chat or through a phone call in less than 5 minutes.",
+  },
+  {
+    imgSrc: "/img/icon-money.png",
+    imgAlt: "Money Icon",
+    title: "More savings means higher rates",
+    content:
+      "The more you save with us, the higher your interest rate will be!",
+  },
+  {
+    imgSrc: "/img/icon-security.png",
+    imgAlt: "Security Icon",
+    title: "Security you can trust",
+    content:
+      "We use top of the line encryption to make sure your data and money is always safe.",
+  },
+];
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+    <main>
+      <Hero />
+      <section className={styles["features"]}>
+        <h2 className="sr-only">Features</h2>
+        {features.map((feature) => (
+          <Feature
+            key={feature.imgSrc}
+            imgSrc={feature.imgSrc}
+            imgAlt={feature.imgAlt}
+            title={feature.title}
+            content={feature.content}
+          />
+        ))}
+      </section>
     </main>
-  )
+  );
 }
