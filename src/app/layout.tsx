@@ -1,4 +1,6 @@
 import Head from "next/head";
+import { Provider } from "react-redux";
+import store from "@/store/redux";
 import Nav from "./components/nav/nav";
 import Footer from "./components/footer/footer";
 import "./globals.css";
@@ -24,9 +26,11 @@ export default function RootLayout({
         />
       </Head>
       <body>
-        <Nav />
-        {children}
-        <Footer />
+        <Provider store={store}>
+          <Nav />
+          {children}
+          <Footer />
+        </Provider>
       </body>
     </html>
   );
