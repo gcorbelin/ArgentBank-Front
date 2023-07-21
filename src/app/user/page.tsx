@@ -6,6 +6,7 @@ import { AppDispatch } from "@/redux/store";
 import Account, { AccountProps } from "../components/account/account";
 import styles from "./page.module.css";
 import { redirect } from "next/navigation";
+import Loader from "../components/loader/loader";
 
 const accounts: AccountProps[] = [
   {
@@ -29,7 +30,6 @@ export default function User() {
   const isAuth = useAppSelector(selectAuth).isAuth;
   const dispatch = useDispatch<AppDispatch>();
   const userInfos = useAppSelector(selectUser).data;
-  // const userInfos = { firstName: "test", lastName: "test" };
 
   useEffect(() => {
     if (!isAuth) {
@@ -39,6 +39,7 @@ export default function User() {
 
   return (
     <>
+      {!isAuth && <Loader />}
       {isAuth && (
         <main className="main bg-dark">
           <div className={styles["header"]}>
