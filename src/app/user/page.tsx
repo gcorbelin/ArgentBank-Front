@@ -1,12 +1,13 @@
 "use client";
-import { useEffect } from "react";
-import { selectAuth, selectUser, useAppSelector } from "@/redux/selectors";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
-import Account, { AccountProps } from "../components/account/account";
-import styles from "./page.module.css";
+import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { selectAuth, selectUser, useAppSelector } from "@/redux/selectors";
+import { AppDispatch } from "@/redux/store";
+import { updateUser } from "@/redux/features/user";
+import Account, { AccountProps } from "../components/account/account";
 import Loader from "../components/loader/loader";
+import styles from "./page.module.css";
 
 const accounts: AccountProps[] = [
   {
@@ -29,13 +30,42 @@ const accounts: AccountProps[] = [
 export default function User() {
   const isAuth = useAppSelector(selectAuth).isAuth;
   const dispatch = useDispatch<AppDispatch>();
-  const userInfos = useAppSelector(selectUser).data;
+  const user = useAppSelector(selectUser);
+  const userInfos = user.data;
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [firstName, setFirstName] = useState<string>(
+    userInfos ? userInfos.firstName : ""
+  );
+  const [lastName, setLastName] = useState<string>(
+    userInfos ? userInfos.lastName : ""
+  );
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    dispatch(updateUser({ firstName: firstName, lastName: lastName }));
+    if (user.status === "resolved") {
+      setIsEditing(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    if (userInfos) {
+      setFirstName(userInfos.firstName);
+      setLastName(userInfos.lastName);
+    }
+  };
 
   useEffect(() => {
     if (!isAuth) {
       redirect("/signin");
     }
-  }, [isAuth, dispatch]);
+    if (userInfos) {
+      setFirstName(userInfos.firstName);
+      setLastName(userInfos.lastName);
+    }
+  }, [isAuth, userInfos, dispatch]);
 
   return (
     <>
@@ -46,9 +76,59 @@ export default function User() {
             <h1>
               Welcome back
               <br />
-              {userInfos?.firstName} {userInfos?.lastName}
+              {!isEditing && (
+                <>
+                  {userInfos?.firstName} {userInfos?.lastName}
+                </>
+              )}
             </h1>
-            <button className={styles["edit-button"]}>Edit Name</button>
+            {isEditing && (
+              <form onSubmit={(event) => handleSubmit(event)}>
+                <div className={styles["update-form-row"]}>
+                  <input
+                    type="text"
+                    id="firstName"
+                    defaultValue={firstName}
+                    onChange={(e) => {
+                      setFirstName(e.target.value);
+                    }}
+                  />
+                  <input
+                    type="text"
+                    id="lastName"
+                    defaultValue={lastName}
+                    onChange={(e) => {
+                      setLastName(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className={styles["update-form-row"]}>
+                  <button
+                    type="button"
+                    className={styles["edit-button"]}
+                    onClick={() => {
+                      handleCancel();
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className={styles["edit-button"]}>
+                    Save
+                  </button>
+                </div>
+              </form>
+            )}
+            {!isEditing && (
+              <button
+                type="button"
+                className={styles["edit-button"]}
+                onClick={() => {
+                  setIsEditing(!isEditing);
+                }}
+              >
+                Edit Name
+              </button>
+            )}
           </div>
           <h2 className="sr-only">Accounts</h2>
           {accounts.map((account) => (

@@ -23,7 +23,6 @@ const initialState = {
 export function getUser() {
   return async function (dispatch: AppDispatch, getState: AppGetState) {
     const status = selectUser(getState()).status;
-    console.log("status", status);
     if (status === "pending" || status === "updating") {
       return;
     }
@@ -46,7 +45,6 @@ export function getUser() {
         }
       );
       const data = await response.json();
-      console.log(data);
       switch (data.status) {
         case 200:
           // Success
@@ -69,17 +67,66 @@ export function getUser() {
           break;
       }
     } catch (error: any) {
-      console.log(error);
       dispatch(actions.rejected(error));
     }
   };
 }
 
-export async function updateUser(userInfos: userData) {
-  // TODO: create async function updateUser (outside of slice) to call API "/user/profile" with JWT in header and an object {firstName:string, lastName:string} in the body
-  // If 200: update state => call setUser
-  // Else 400: format error
-  // Else 500: a problem occured
+export function updateUser(userInfos: userData) {
+  console.log("updating user...");
+  return async function (dispatch: AppDispatch, getState: AppGetState) {
+    const status = selectUser(getState()).status;
+    if (status === "pending" || status === "updating") {
+      return;
+    }
+    dispatch(actions.fetching());
+    try {
+      const localstorage_user = JSON.parse(localStorage.getItem("user") || "");
+      const inMemoryToken = localstorage_user.body.token;
+
+      var myHeaders = new Headers();
+      myHeaders.append("accept", "application/json");
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Authorization", `Bearer ${inMemoryToken}`);
+
+      const response = await fetch(
+        "http://localhost:3001/api/v1/user/profile",
+        {
+          method: "PUT",
+          headers: myHeaders,
+          body: JSON.stringify({
+            firstName: userInfos.firstName,
+            lastName: userInfos.lastName,
+          }),
+          redirect: "follow",
+        }
+      );
+      const data = await response.json();
+      switch (data.status) {
+        case 200:
+          // Success
+          const userInfos = {
+            firstName: data.body.firstName,
+            lastName: data.body.lastName,
+          };
+          dispatch(actions.resolved(userInfos));
+          break;
+        case 400:
+          // Invalid fields
+          dispatch(actions.rejected(data.message));
+          break;
+        case 500:
+          // Internal server error
+          dispatch(actions.rejected(data.message));
+          break;
+        default:
+          // Unhandled
+          break;
+      }
+    } catch (error: any) {
+      dispatch(actions.rejected(error));
+    }
+  };
 }
 
 // Slice

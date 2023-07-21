@@ -10,3 +10,22 @@
   font-weight: bold;
   padding: 10px;
 }
+
+.update-form-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.update-form-row + .update-form-row {
+  margin-top: 1rem;
+}
+
+.update-form-row input {
+  padding: 0.5rem;
+  border-radius: 0;
+}
+
+.update-form-row .edit-button {
+  width: 100px;
+}
