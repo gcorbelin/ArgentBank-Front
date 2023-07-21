@@ -14,10 +14,7 @@ type userData = {
 };
 
 const initialState = {
-  data: {
-    firstName: "",
-    lastName: "",
-  },
+  data: null,
   error: null,
   status: "void",
 } as userState;
@@ -58,8 +55,6 @@ export function getUser() {
             lastName: data.body.lastName,
           };
           dispatch(actions.resolved(userInfos));
-          // TODO: Ask API for user infos
-          // TODO: redirect to /user
           break;
         case 400:
           // Invalid fields
@@ -79,11 +74,6 @@ export function getUser() {
     }
   };
 }
-
-// TODO: create async function updateUser (outside of slice) to call API "/user/profile" with JWT in header and an object {firstName:string, lastName:string} in the body
-// If 200: update state => call setUser
-// Else 400: format error
-// Else 500: a problem occured
 
 export async function updateUser(userInfos: userData) {
   // TODO: create async function updateUser (outside of slice) to call API "/user/profile" with JWT in header and an object {firstName:string, lastName:string} in the body

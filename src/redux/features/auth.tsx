@@ -11,7 +11,7 @@ type AuthState = {
 const initialState = {
   isAuth: false,
   status: "void",
-  error: "",
+  error: null,
 } as AuthState;
 
 // Middleware
@@ -48,8 +48,6 @@ export function logIn({
           // Success
           dispatch(actions.resolved());
           localStorage.setItem("user", JSON.stringify(data));
-          // TODO: Ask API for user infos
-          // TODO: redirect to /user
           break;
         case 400:
           // Invalid fields
