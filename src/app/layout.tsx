@@ -1,3 +1,4 @@
+import { ReduxProvider } from "@/redux/provider";
 import Head from "next/head";
 import { Provider } from "react-redux";
 import store from "@/store/redux";
@@ -26,11 +27,11 @@ export default function RootLayout({
         />
       </Head>
       <body>
-        <Provider store={store}>
+        <ReduxProvider>
           <Nav />
           {children}
           <Footer />
-        </Provider>
+        </ReduxProvider>
       </body>
     </html>
   );

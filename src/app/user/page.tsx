@@ -1,5 +1,11 @@
+"use client";
+import { useEffect } from "react";
+import { selectAuth, selectUser, useAppSelector } from "@/redux/selectors";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 import Account, { AccountProps } from "../components/account/account";
 import styles from "./page.module.css";
+import { redirect } from "next/navigation";
 
 const accounts: AccountProps[] = [
   {
@@ -20,25 +26,40 @@ const accounts: AccountProps[] = [
 ];
 
 export default function User() {
+  const isAuth = useAppSelector(selectAuth).isAuth;
+  const dispatch = useDispatch<AppDispatch>();
+  const userInfos = useAppSelector(selectUser).data;
+  // const userInfos = { firstName: "test", lastName: "test" };
+
+  useEffect(() => {
+    if (!isAuth) {
+      redirect("/signin");
+    }
+  }, [isAuth, dispatch]);
+
   return (
-    <main className="main bg-dark">
-      <div className={styles["header"]}>
-        <h1>
-          Welcome back
-          <br />
-          Tony Jarvis!
-        </h1>
-        <button className={styles["edit-button"]}>Edit Name</button>
-      </div>
-      <h2 className="sr-only">Accounts</h2>
-      {accounts.map((account) => (
-        <Account
-          key={account.title}
-          title={account.title}
-          amount={account.amount}
-          description={account.description}
-        />
-      ))}
-    </main>
+    <>
+      {isAuth && (
+        <main className="main bg-dark">
+          <div className={styles["header"]}>
+            <h1>
+              Welcome back
+              <br />
+              {userInfos?.firstName} {userInfos?.lastName}
+            </h1>
+            <button className={styles["edit-button"]}>Edit Name</button>
+          </div>
+          <h2 className="sr-only">Accounts</h2>
+          {accounts.map((account) => (
+            <Account
+              key={account.title}
+              title={account.title}
+              amount={account.amount}
+              description={account.description}
+            />
+          ))}
+        </main>
+      )}
+    </>
   );
 }
