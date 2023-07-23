@@ -73,7 +73,6 @@ export function getUser() {
 }
 
 export function updateUser(userInfos: userData) {
-  console.log("updating user...");
   return async function (dispatch: AppDispatch, getState: AppGetState) {
     const status = selectUser(getState()).status;
     if (status === "pending" || status === "updating") {

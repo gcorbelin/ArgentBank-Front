@@ -69,7 +69,7 @@ export default function User() {
 
   return (
     <>
-      {!isAuth && <Loader />}
+      {(!isAuth || user.status === "pending") && <Loader />}
       {isAuth && (
         <main className="main bg-dark">
           <div className={styles["header"]}>
