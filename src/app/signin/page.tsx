@@ -7,12 +7,13 @@ import { logIn } from "@/redux/features/auth";
 import { getUser } from "@/redux/features/user";
 import { selectAuth, useAppSelector } from "@/redux/selectors";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import styles from "./page.module.css";
 
 export default function SignIn() {
   const [userName, setUserName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const authStatus = useAppSelector(selectAuth).status;
   const authError = useAppSelector(selectAuth).error;
   const isAuth = useAppSelector(selectAuth).isAuth;
   const dispatch = useDispatch<AppDispatch>();
@@ -63,9 +64,12 @@ export default function SignIn() {
             <input type="checkbox" id="remember-me" />
             <label htmlFor="remember-me">Remember me</label>
           </div>
-          {authError && <p>{authError}</p>}
+          {authError && <p className={styles["sign-in-error"]}>{authError}</p>}
           <button type="submit" className={styles["sign-in-button"]}>
-            Sign In
+            {authStatus === "pending" && (
+              <FontAwesomeIcon icon={faSpinner} spin />
+            )}
+            {authStatus !== "pending" && <>Sign In</>}
           </button>
         </form>
       </section>

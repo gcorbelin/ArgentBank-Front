@@ -62,7 +62,7 @@ export function logIn({
           break;
       }
     } catch (error: any) {
-      dispatch(actions.rejected(error));
+      dispatch(actions.rejected(error.message));
     }
   };
 }
