@@ -137,6 +137,41 @@ paths:
           description: Invalid Fields
         "500":
           description: Internal Server Error
+  /user/transaction/{idTransaction}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: Get a specified transaction's informations
+      description: API for fetching a user's specified transaction
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+        - in: path
+          name: idTransaction
+          required: true
+          properties:
+            idTransaction:
+              type: string
+              description: Transaction's ID
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: User's transaction retrieved successully
+          schema:
+            $ref: "#/definitions/Transaction"
+        "400":
+          description: Invalid Fields
+        "404":
+          description: Transaction not found
+        "500":
+          description: Internal Server Error
+
   /user/transaction/{idTransaction}/category:
     put:
       security:
@@ -151,6 +186,13 @@ paths:
           description: Attach Bearer JWT token
           required: true
           type: string
+        - in: path
+          name: idTransaction
+          required: true
+          properties:
+            idTransaction:
+              type: string
+              description: Transaction's ID
         - in: body
           name: body
           description: Transaction category Payload
@@ -186,6 +228,13 @@ paths:
           description: Attach Bearer JWT token
           required: true
           type: string
+        - in: path
+          name: idTransaction
+          required: true
+          properties:
+            idTransaction:
+              type: string
+              description: Transaction's ID
         - in: body
           name: body
           description: Transaction notes Payload
