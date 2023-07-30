@@ -119,7 +119,7 @@ paths:
       tags:
         - Transactions Module
       summary: User Transactions API
-      description: API for fetching a user's transactions
+      description: API for fetching all user's transactions
       parameters:
         - in: header
           name: Authorization
@@ -154,17 +154,15 @@ paths:
         - in: path
           name: idTransaction
           required: true
-          properties:
-            idTransaction:
-              type: string
-              description: Transaction's ID
+          type: string
+          description: Transaction's ID
       produces:
         - application/json
       responses:
         "200":
           description: User's transaction retrieved successully
           schema:
-            $ref: "#/definitions/Transaction"
+            $ref: "#/definitions/TransactionResponse"
         "400":
           description: Invalid Fields
         "404":
@@ -189,25 +187,25 @@ paths:
         - in: path
           name: idTransaction
           required: true
-          properties:
-            idTransaction:
-              type: string
-              description: Transaction's ID
+          type: string
+          description: Transaction's ID
         - in: body
           name: body
           description: Transaction category Payload
           required: true
-          properties:
-            category:
-              type: string
-              description: New category
+          schema:
+            type: object
+            properties:
+              category:
+                type: string
+                description: New category
       produces:
         - application/json
       responses:
         "200":
           description: Transaction's category updated successully
           schema:
-            $ref: "#/definitions/Transaction"
+            $ref: "#/definitions/TransactionResponse"
         "400":
           description: Invalid Fields
         "404":
@@ -231,25 +229,25 @@ paths:
         - in: path
           name: idTransaction
           required: true
-          properties:
-            idTransaction:
-              type: string
-              description: Transaction's ID
+          type: string
+          description: Transaction's ID
         - in: body
           name: body
           description: Transaction notes Payload
           required: true
-          properties:
-            notes:
-              type: string
-              description: New notes
+          schema:
+            type: object
+            properties:
+              notes:
+                type: string
+                description: New notes
       produces:
         - application/json
       responses:
         "200":
           description: Transaction's notes updated successully
           schema:
-            $ref: "#/definitions/Transaction"
+            $ref: "#/definitions/TransactionResponse"
         "400":
           description: Invalid Fields
         "404":
@@ -311,11 +309,27 @@ definitions:
       lastName:
         type: string
   TransactionsResponse:
-    type: array
-    xml:
-      wrapped: true
-    items:
-      $ref: "#/definitions/Transaction"
+    type: object
+    properties:
+      userId:
+        type: string
+      userEmail:
+        type: string
+      transactions:
+        type: array
+        xml:
+          wrapped: true
+        items:
+          $ref: "#/definitions/Transaction"
+  TransactionResponse:
+    type: object
+    properties:
+      userId:
+        type: string
+      userEmail:
+        type: string
+      transaction:
+        $ref: "#/definitions/Transaction"
   Transaction:
     type: object
     properties:
